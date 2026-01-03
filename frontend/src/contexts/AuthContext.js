@@ -158,22 +158,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [checkAuth]);
 
-  // Also handle visibility change to re-check auth when tab becomes visible
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && !isLoggingIn.current) {
-        // Only check auth if we have a token stored
-        const token = localStorage.getItem('session_token');
-        if (token && !user) {
-          checkAuth();
-        }
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [checkAuth, user]);
-
   const value = {
     user,
     loading,
