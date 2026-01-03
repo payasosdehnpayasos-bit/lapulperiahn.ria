@@ -606,22 +606,13 @@ const AdminPanel = () => {
                         </button>
                       )}
                       
-                      {/* Global Ad Slot - NEW */}
+                      {/* Global Ad Slot */}
                       <button
                         onClick={() => { setSelectedPulperia(pulperia); setShowEnableAdSlotDialog(true); }}
                         className="bg-orange-500/20 text-orange-400 py-2 px-3 rounded-xl text-sm font-bold border border-orange-500/50 hover:bg-orange-500/30 transition-all"
                         title="Dar Slot de Anuncio Global"
                       >
                         <Tv className="w-4 h-4" />
-                      </button>
-                      
-                      {/* Badge */}
-                      <button
-                        onClick={() => { setSelectedPulperia(pulperia); setSelectedBadge(pulperia.badge || ''); setShowBadgeDialog(true); }}
-                        className="bg-purple-500/20 text-purple-400 py-2 px-3 rounded-xl text-sm font-bold border border-purple-500/50 hover:bg-purple-500/30 transition-all"
-                        title="Asignar Badge"
-                      >
-                        <Award className="w-4 h-4" />
                       </button>
                       
                       {/* Message */}
@@ -652,7 +643,7 @@ const AdminPanel = () => {
                         </button>
                       )}
                       
-                      {/* Delete Pulperia - NEW */}
+                      {/* Delete Pulperia */}
                       <button
                         onClick={() => handleDeletePulperia(pulperia.pulperia_id, pulperia.name)}
                         className="bg-red-600/20 text-red-400 py-2 px-3 rounded-xl text-sm font-bold border border-red-600/50 hover:bg-red-600/30 transition-all"
