@@ -254,7 +254,12 @@ const PulperiaDashboard = () => {
       // Get ad slot
       try {
         const slotRes = await api.get('/api/featured-ads/my-slot');
-        setMyAdSlot(slotRes.data);
+        // Only set myAdSlot if it actually has a slot
+        if (slotRes.data && slotRes.data.has_slot) {
+          setMyAdSlot(slotRes.data);
+        } else {
+          setMyAdSlot(null);
+        }
       } catch (e) {
         setMyAdSlot(null);
       }
