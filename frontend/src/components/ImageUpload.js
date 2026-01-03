@@ -58,9 +58,27 @@ const ImageUpload = ({
       toast.success('Imagen subida correctamente');
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Error al subir imagen');
+      
+      // Better error handling
+      if (error.response?.status === 401) {
+        toast.error('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+        // Reload to trigger re-authentication
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else if (error.response?.status === 413) {
+        toast.error('Imagen demasiado grande. Intenta con una más pequeña.');
+      } else if (error.response?.data?.detail) {
+        toast.error(error.response.data.detail);
+      } else {
+        toast.error('Error al subir imagen. Verifica tu conexión e intenta de nuevo.');
+      }
     } finally {
       setUploading(false);
+      // Clear the file input so the same file can be selected again if needed
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
