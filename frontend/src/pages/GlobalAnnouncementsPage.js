@@ -10,14 +10,19 @@ import BottomNav from '../components/BottomNav';
 import AnimatedBackground from '../components/AnimatedBackground';
 import GalacticLoader from '../components/GalacticLoader';
 
-const GlobalAnnouncementsPage = ({ user }) => {
+const GlobalAnnouncementsPage = () => {
   const navigate = useNavigate();
   const [announcements, setAnnouncements] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Get current user
+        const userRes = await api.get('/api/auth/me').catch(() => ({ data: null }));
+        setUser(userRes.data);
+        
         // Los anuncios globales son los featured ads de las pulperías
         const response = await api.get('/api/featured-ads').catch(() => ({ data: [] }));
         setAnnouncements(response.data || []);
