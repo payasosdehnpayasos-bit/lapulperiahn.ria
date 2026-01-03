@@ -118,6 +118,15 @@ const OrderHistory = () => {
             <History className="w-4 h-4" />
             Historial
           </button>
+          <button
+            onClick={() => setActiveTab('tips')}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'tips' ? 'bg-red-600 text-white' : 'text-stone-500 hover:text-white'
+            }`}
+          >
+            <Bot className="w-4 h-4" />
+            Tips IA
+          </button>
         </div>
 
         {/* Stats Tab */}
