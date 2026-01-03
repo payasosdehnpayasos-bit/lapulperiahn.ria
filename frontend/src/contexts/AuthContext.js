@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   // Login with session_id from Google OAuth (Emergent Auth)
   const login = useCallback(async (sessionId) => {
