@@ -73,7 +73,6 @@ const PulperiaProfile = () => {
   const [products, setProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [jobs, setJobs] = useState([]);
-  const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
@@ -87,7 +86,6 @@ const PulperiaProfile = () => {
   const [togglingFavorite, setTogglingFavorite] = useState(false);
   const [viewingImage, setViewingImage] = useState(null);
   const [viewingAnnouncement, setViewingAnnouncement] = useState(null);
-  const [showShareDialog, setShowShareDialog] = useState(false);
 
   // Check if favorite
   const checkFavorite = useCallback(async () => {
