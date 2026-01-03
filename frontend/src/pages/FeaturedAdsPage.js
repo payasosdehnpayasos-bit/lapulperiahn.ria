@@ -37,11 +37,8 @@ const FeaturedAdsPage = () => {
   const navigate = useNavigate();
   
   const [adForm, setAdForm] = useState({
-    title: '',
     description: '',
-    image_url: '',
-    video_url: '',
-    link_url: ''
+    image_url: ''
   });
 
   useEffect(() => {
