@@ -31,6 +31,12 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
     
+    // If we already have user data, don't check again
+    if (user) {
+      setLoading(false);
+      return user;
+    }
+    
     try {
       setLoading(true);
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
