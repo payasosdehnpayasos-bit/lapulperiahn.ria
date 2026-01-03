@@ -625,54 +625,6 @@ const PulperiaProfile = () => {
             )}
           </div>
         )}
-
-        {/* Logros Tab - New */}
-        {activeTab === 'logros' && (
-          <div className="space-y-4">
-            {achievements.length === 0 ? (
-              <div className="text-center py-12 bg-stone-900/50 rounded-2xl border border-stone-800">
-                <Trophy className="w-12 h-12 text-stone-700 mx-auto mb-3" />
-                <p className="text-stone-500">Esta pulpería aún no tiene logros</p>
-                <p className="text-stone-600 text-sm mt-1">Los logros se desbloquean con ventas, productos y clientes felices</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3">
-                {achievements.map(ach => {
-                  const info = ACHIEVEMENT_INFO[ach.badge_id] || { name: ach.badge_id, icon: '🏅', color: 'from-gray-600 to-gray-500' };
-                  return (
-                    <div 
-                      key={ach.achievement_id}
-                      className={`bg-gradient-to-br ${info.color} rounded-2xl p-4 shadow-lg ${info.legendary ? 'ring-2 ring-yellow-400 ring-offset-2 ring-offset-stone-950' : ''}`}
-                    >
-                      <div className="text-3xl mb-2">{info.icon}</div>
-                      <h3 className="font-bold text-white">{info.name}</h3>
-                      <p className="text-white/70 text-xs mt-1">
-                        {new Date(ach.unlocked_at).toLocaleDateString('es-HN')}
-                      </p>
-                      {info.legendary && (
-                        <div className="mt-2 bg-yellow-400/20 rounded-full px-2 py-0.5 inline-block">
-                          <span className="text-yellow-300 text-xs font-bold">✨ Legendario</span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            
-            {/* Achievement Progress Info */}
-            <div className="bg-stone-900/50 rounded-xl p-4 border border-stone-700 mt-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Award className="w-5 h-5 text-amber-400" />
-                <span className="text-white font-bold">Sistema de Meritocracia</span>
-              </div>
-              <p className="text-stone-400 text-sm">
-                Las pulperías desbloquean logros basados en ventas, productos, visitas y reseñas de clientes. 
-                ¡Los logros legendarios son especialmente difíciles de conseguir!
-              </p>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Review Dialog */}
