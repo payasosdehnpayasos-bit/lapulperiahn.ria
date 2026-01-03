@@ -975,3 +975,7 @@ agent_communication:
     -message: "Bug: Errores al cargar Dashboard de pulpería."
     -agent: "main"
     -message: "Bug corregido. El problema estaba en PulperiaProfile.js que tenía referencias a variables eliminadas (achievements, showShareDialog). Limpiado completamente: eliminados imports de SharePulperia, estados de achievements y showShareDialog, fetch de achievements API, tab de logros completo. Agregado diálogo nativo de compartir con redes sociales. Frontend reiniciado y funcionando correctamente."
+    -agent: "user"
+    -message: "Bug persiste: Errores con iconos Globe y Wifi faltantes. Solicitud: Agregar funcionalidad al AdminPanel para dar slots de anuncios globales y cerrar tiendas."
+    -agent: "main"
+    -message: "Bugs corregidos y funcionalidades agregadas: 1) Agregados TODOS los iconos faltantes al import de PulperiaDashboard (Globe, Wifi). 2) Agregado botón en AdminPanel para asignar slots de anuncios globales (usa diálogo existente). 3) Agregada función handleDeletePulperia con confirmación de seguridad (requiere escribir el nombre exacto de la tienda). 4) Agregado botón de eliminar tienda (icono Trash2) con advertencia de eliminación permanente. Frontend limpiado de caché y reiniciado."
