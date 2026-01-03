@@ -161,6 +161,8 @@ export const AuthProvider = ({ children }) => {
         }
       );
       setUser(response.data);
+      // Update cache
+      localStorage.setItem('cached_user', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('[Auth] Set user type error:', error);
