@@ -275,13 +275,12 @@ const PulperiaDashboard = () => {
 
   const fetchPulperiaData = async (pulperiaId) => {
     try {
-      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes, achievementsRes, statsRes] = await Promise.all([
+      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes, statsRes] = await Promise.all([
         api.get(`/api/pulperias/${pulperiaId}/products`),
         api.get(`/api/orders`),
         api.get(`/api/pulperias/${pulperiaId}/jobs`).catch(() => ({ data: [] })),
         api.get(`/api/pulperias/${pulperiaId}/announcements`).catch(() => ({ data: [] })),
         api.get(`/api/pulperias/${pulperiaId}/admin-messages`).catch(() => ({ data: [] })),
-        api.get(`/api/pulperias/${pulperiaId}/achievements`).catch(() => ({ data: [] })),
         api.get(`/api/pulperias/${pulperiaId}/stats`).catch(() => ({ data: null }))
       ]);
       
@@ -289,7 +288,6 @@ const PulperiaDashboard = () => {
       setJobs(jobsRes.data);
       setAnnouncements(announcementsRes.data);
       setAdminMessages(adminMsgsRes.data);
-      setAchievements(achievementsRes.data);
       setPulperiaStats(statsRes.data);
       const pulperiaOrders = ordersRes.data.filter(o => o.pulperia_id === pulperiaId);
       setOrders(pulperiaOrders);
