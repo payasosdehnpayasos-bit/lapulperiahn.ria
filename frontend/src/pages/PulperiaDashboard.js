@@ -2108,26 +2108,6 @@ const PulperiaDashboard = () => {
         </DialogContent>
       </Dialog>
 
-      {/* v1.1 - Modal de Reportes */}
-      <SalesReports
-        pulperiaId={selectedPulperia?.pulperia_id}
-        open={showReports}
-        onOpenChange={setShowReports}
-      />
-
-      {/* v1.1 - Modal de Tips con IA */}
-      <AITips
-        open={showAITips}
-        onOpenChange={setShowAITips}
-      />
-
-      {/* v1.1 - Modal de Compartir */}
-      <SharePulperia
-        pulperia={selectedPulperia}
-        open={showShareDialog}
-        onOpenChange={setShowShareDialog}
-      />
-
       <BottomNav user={user} />
     </div>
   );
