@@ -317,9 +317,16 @@ const OrderHistory = () => {
             )}
           </div>
         )}
+
+        {/* Tips IA Tab */}
+        {activeTab === 'tips' && (
+          <div>
+            <AITips />
+          </div>
+        )}
       </div>
 
-      <BottomNav user={user} cartCount={cartCount} />
+      <BottomNav user={user} cartCount={cartCount} activeTab="reportes" />
     </div>
   );
 };
