@@ -585,6 +585,15 @@ const AdminPanel = () => {
                         </button>
                       )}
                       
+                      {/* Global Ad Slot - NEW */}
+                      <button
+                        onClick={() => { setSelectedPulperia(pulperia); setShowEnableAdSlotDialog(true); }}
+                        className="bg-orange-500/20 text-orange-400 py-2 px-3 rounded-xl text-sm font-bold border border-orange-500/50 hover:bg-orange-500/30 transition-all"
+                        title="Dar Slot de Anuncio Global"
+                      >
+                        <Tv className="w-4 h-4" />
+                      </button>
+                      
                       {/* Badge */}
                       <button
                         onClick={() => { setSelectedPulperia(pulperia); setSelectedBadge(pulperia.badge || ''); setShowBadgeDialog(true); }}
@@ -621,6 +630,15 @@ const AdminPanel = () => {
                           <Ban className="w-4 h-4" />
                         </button>
                       )}
+                      
+                      {/* Delete Pulperia - NEW */}
+                      <button
+                        onClick={() => handleDeletePulperia(pulperia.pulperia_id, pulperia.name)}
+                        className="bg-red-600/20 text-red-400 py-2 px-3 rounded-xl text-sm font-bold border border-red-600/50 hover:bg-red-600/30 transition-all"
+                        title="Cerrar/Eliminar Tienda"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 );
