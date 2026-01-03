@@ -20,7 +20,7 @@ const BottomNav = ({ user, cartCount = 0, activeTab }) => {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', testId: 'nav-dashboard', tab: 'dashboard' },
     { icon: Briefcase, label: 'Chamba', path: '/jobs', testId: 'nav-jobs', tab: 'jobs', isChamba: true },
     { icon: Megaphone, label: 'Anuncios', path: '/anuncios-globales', testId: 'nav-anuncios', tab: 'anuncios', isAnuncios: true },
-    { icon: History, label: 'Historial', path: '/order-history', testId: 'nav-history', tab: 'historial' },
+    { icon: History, label: 'Reportes', path: '/order-history', testId: 'nav-reportes', tab: 'reportes' },
     { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile', tab: 'perfil' },
   ] : [
     { icon: MapPin, label: 'Mapa', path: '/map', testId: 'nav-map', tab: 'mapa' },
