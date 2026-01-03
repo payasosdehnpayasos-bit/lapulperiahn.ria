@@ -273,20 +273,18 @@ const PulperiaDashboard = () => {
 
   const fetchPulperiaData = async (pulperiaId) => {
     try {
-      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes, statsRes] = await Promise.all([
+      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes] = await Promise.all([
         api.get(`/api/pulperias/${pulperiaId}/products`),
         api.get(`/api/orders`),
         api.get(`/api/pulperias/${pulperiaId}/jobs`).catch(() => ({ data: [] })),
         api.get(`/api/pulperias/${pulperiaId}/announcements`).catch(() => ({ data: [] })),
-        api.get(`/api/pulperias/${pulperiaId}/admin-messages`).catch(() => ({ data: [] })),
-        api.get(`/api/pulperias/${pulperiaId}/stats`).catch(() => ({ data: null }))
+        api.get(`/api/pulperias/${pulperiaId}/admin-messages`).catch(() => ({ data: [] }))
       ]);
       
       setProducts(productsRes.data);
       setJobs(jobsRes.data);
       setAnnouncements(announcementsRes.data);
       setAdminMessages(adminMsgsRes.data);
-      setPulperiaStats(statsRes.data);
       const pulperiaOrders = ordersRes.data.filter(o => o.pulperia_id === pulperiaId);
       setOrders(pulperiaOrders);
       
@@ -298,7 +296,6 @@ const PulperiaDashboard = () => {
     }
   };
 
-  // Función para verificar y desbloquear nuevos logros
   const checkNewOrders = async (pulperiaId) => {
     try {
       const ordersRes = await api.get(`/api/orders`);
