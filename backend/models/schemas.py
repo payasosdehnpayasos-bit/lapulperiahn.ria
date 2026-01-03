@@ -53,6 +53,7 @@ class PulperiaCreate(BaseModel):
     website: Optional[str] = None
     instagram_url: Optional[str] = None
     facebook_url: Optional[str] = None
+    twitter_url: Optional[str] = None
     hours: Optional[str] = None
     image_url: Optional[str] = None
     logo_url: Optional[str] = None
