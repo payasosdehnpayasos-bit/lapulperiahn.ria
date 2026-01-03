@@ -56,21 +56,23 @@ export const AuthProvider = ({ children }) => {
       });
       
       setUser(response.data);
+      // Cache user data for faster subsequent loads
+      localStorage.setItem('cached_user', JSON.stringify(response.data));
+      setLoading(false);
       return response.data;
     } catch (error) {
       console.log('[Auth] Session check failed:', error.message);
       // Only clear token on 401 errors (unauthorized)
       if (error.response?.status === 401) {
         localStorage.removeItem('session_token');
+        localStorage.removeItem('cached_user');
         setUser(null);
       } else {
-        // For network errors, timeout, etc. - try to use cached user data
-        // or keep the token and let the user retry
+        // For network errors, timeout, etc. - keep the token for retry
         console.log('[Auth] Network error, keeping session token for retry');
       }
-      return null;
-    } finally {
       setLoading(false);
+      return null;
     }
   }, []);
 
