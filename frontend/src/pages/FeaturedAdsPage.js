@@ -61,7 +61,12 @@ const FeaturedAdsPage = () => {
         
         if (userRes.data.user_type === 'pulperia') {
           const slotRes = await api.get('/api/featured-ads/my-slot');
-          setMySlot(slotRes.data);
+          // Only set mySlot if it actually has a slot
+          if (slotRes.data && slotRes.data.has_slot) {
+            setMySlot(slotRes.data);
+          } else {
+            setMySlot(null);
+          }
         }
       } catch (e) {
         // Not logged in, that's ok
