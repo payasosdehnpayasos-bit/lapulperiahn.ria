@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import GalacticLoader from './GalacticLoader';
@@ -7,6 +7,7 @@ import GalacticLoader from './GalacticLoader';
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const { user, loading } = useAuth();
+  const [hasAttemptedAuth, setHasAttemptedAuth] = useState(false);
   
   // If user data was passed from AuthCallback, use it immediately
   const hasUserFromCallback = useMemo(() => !!location.state?.user, [location.state?.user]);
@@ -14,12 +15,23 @@ const ProtectedRoute = ({ children }) => {
   // Check if we have a session token stored (indicates we might be authenticated)
   const hasStoredToken = useMemo(() => !!localStorage.getItem('session_token'), []);
   
+  // Track when we've finished at least one auth attempt
+  useEffect(() => {
+    if (!loading && hasStoredToken) {
+      setHasAttemptedAuth(true);
+    }
+  }, [loading, hasStoredToken]);
+  
   // Determine authentication status
   const isAuthenticated = hasUserFromCallback || !!user;
 
-  // Show loading state ALWAYS when loading AND we have a token
-  // This prevents redirecting during token validation
-  if (loading && hasStoredToken) {
+  // Show loading ONLY when:
+  // 1. We're loading AND
+  // 2. We have a token AND
+  // 3. We haven't attempted auth yet OR we're still verifying
+  const shouldShowLoader = loading && hasStoredToken;
+
+  if (shouldShowLoader) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-950 relative overflow-hidden">
         {/* Nebulosa de fondo */}
@@ -50,24 +62,18 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Redirect to login only if we're sure user is not authenticated
-  // AND no token exists (to prevent false redirects during validation)
+  // Redirect to login if definitely not authenticated
   if (!loading && !isAuthenticated && !hasStoredToken) {
     return <Navigate to="/" replace />;
   }
-
-  // If we have a token but still loading, keep showing loader
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-950 relative overflow-hidden">
-        <div className="relative z-10">
-          <GalacticLoader size="default" text="Cargando..." />
-        </div>
-      </div>
-    );
+  
+  // If we're authenticated or still checking, render children
+  if (isAuthenticated || (loading && hasStoredToken)) {
+    return children;
   }
 
-  return children;
+  // Final fallback - redirect to login
+  return <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;
