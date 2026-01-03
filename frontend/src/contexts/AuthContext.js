@@ -12,7 +12,15 @@ const getAuthHeaders = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // Initialize user from localStorage cache if available
+  const [user, setUser] = useState(() => {
+    try {
+      const cachedUser = localStorage.getItem('cached_user');
+      return cachedUser ? JSON.parse(cachedUser) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const isLoggingIn = useRef(false);
 
@@ -27,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     // Si no hay token, no hay sesión
     if (!token) {
       setUser(null);
+      localStorage.removeItem('cached_user');
       setLoading(false);
       return null;
     }
