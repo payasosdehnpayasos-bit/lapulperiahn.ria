@@ -120,6 +120,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('session_token', userData.session_token);
     }
     setUser(userData);
+    // Cache user data
+    localStorage.setItem('cached_user', JSON.stringify(userData));
     setLoading(false);
   }, []);
 
@@ -140,6 +142,7 @@ export const AuthProvider = ({ children }) => {
       console.error('[Auth] Logout error:', error);
     } finally {
       localStorage.removeItem('session_token');
+      localStorage.removeItem('cached_user');
       // Don't clear disclaimer_seen - user shouldn't see it again
       setUser(null);
       toast.success('Sesión cerrada');
