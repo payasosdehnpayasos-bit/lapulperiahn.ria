@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     }
     
     try {
+      setLoading(true);
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
         timeout: 15000,
         headers: {
