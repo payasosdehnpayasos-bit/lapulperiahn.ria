@@ -119,13 +119,12 @@ const PulperiaProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [userRes, pulperiaRes, productsRes, reviewsRes, jobsRes, achievementsRes] = await Promise.all([
+        const [userRes, pulperiaRes, productsRes, reviewsRes, jobsRes] = await Promise.all([
           api.get(`/api/auth/me`),
           api.get(`/api/pulperias/${id}`),
           api.get(`/api/pulperias/${id}/products`),
           api.get(`/api/pulperias/${id}/reviews`),
-          api.get(`/api/pulperias/${id}/jobs`).catch(() => ({ data: [] })),
-          api.get(`/api/pulperias/${id}/achievements`).catch(() => ({ data: [] }))
+          api.get(`/api/pulperias/${id}/jobs`).catch(() => ({ data: [] }))
         ]);
         
         setUser(userRes.data);
@@ -133,7 +132,6 @@ const PulperiaProfile = () => {
         setProducts(productsRes.data.filter(p => p.available !== false));
         setReviews(reviewsRes.data);
         setJobs(jobsRes.data);
-        setAchievements(achievementsRes.data);
         
         // Fetch announcements
         try {
