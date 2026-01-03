@@ -684,6 +684,67 @@ const PulperiaProfile = () => {
         </div>
       )}
 
+      {/* Share Dialog */}
+      <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
+        <DialogContent className="max-w-sm mx-4 bg-stone-900 border-stone-800">
+          <DialogHeader>
+            <DialogTitle className="text-white">Compartir Pulpería</DialogTitle>
+          </DialogHeader>
+          
+          {pulperia && (
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <div className="flex-1 bg-stone-800 rounded-lg px-3 py-2 text-sm text-stone-400 truncate border border-stone-700">
+                  {window.location.href}
+                </div>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success('¡Link copiado!');
+                  }}
+                  className="bg-red-600 hover:bg-red-500 text-white px-3"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              {/* Social Share Buttons */}
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  onClick={() => {
+                    const shareUrl = window.location.href;
+                    const text = `¡Visita ${pulperia.name} en La Pulpería!`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + shareUrl)}`, '_blank');
+                  }}
+                  className="bg-green-600 hover:bg-green-500 text-white text-xs py-2"
+                >
+                  WhatsApp
+                </Button>
+                <Button
+                  onClick={() => {
+                    const shareUrl = window.location.href;
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+                  }}
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-xs py-2"
+                >
+                  Facebook
+                </Button>
+                <Button
+                  onClick={() => {
+                    const shareUrl = window.location.href;
+                    const text = `¡Visita ${pulperia.name}!`;
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                  }}
+                  className="bg-sky-500 hover:bg-sky-400 text-white text-xs py-2"
+                >
+                  Twitter
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <BottomNav user={user} cartCount={cartCount} />
     </div>
   );
