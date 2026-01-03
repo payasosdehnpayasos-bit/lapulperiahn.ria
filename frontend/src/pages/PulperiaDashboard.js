@@ -82,11 +82,6 @@ const PulperiaDashboard = () => {
   const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
   const [myAdSlot, setMyAdSlot] = useState(null);
   
-  // v1.1 - Nuevos estados para reportes, tips y compartir
-  const [showReports, setShowReports] = useState(false);
-  const [showAITips, setShowAITips] = useState(false);
-  const [showShareDialog, setShowShareDialog] = useState(false);
-  
   // Floating notifications context
   const floatingNotifications = useNotifications();
   
