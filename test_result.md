@@ -979,3 +979,7 @@ agent_communication:
     -message: "Bug persiste: Errores con iconos Globe y Wifi faltantes. Solicitud: Agregar funcionalidad al AdminPanel para dar slots de anuncios globales y cerrar tiendas."
     -agent: "main"
     -message: "Bugs corregidos y funcionalidades agregadas: 1) Agregados TODOS los iconos faltantes al import de PulperiaDashboard (Globe, Wifi). 2) Agregado botón en AdminPanel para asignar slots de anuncios globales (usa diálogo existente). 3) Agregada función handleDeletePulperia con confirmación de seguridad (requiere escribir el nombre exacto de la tienda). 4) Agregado botón de eliminar tienda (icono Trash2) con advertencia de eliminación permanente. Frontend limpiado de caché y reiniciado."
+    -agent: "user"
+    -message: "Nuevas solicitudes: 1) Cambiar 'Twitter' a 'X' en botones de compartir (color negro). 2) Agregar campo de X/Twitter al perfil de pulperías. 3) Problema del refresh persiste - sigue redirigiendo al login."
+    -agent: "main"
+    -message: "Implementados todos los cambios: 1) Cambiado 'Twitter' a 'X' con color negro en PulperiaDashboard y PulperiaProfile. 2) Agregado campo twitter_url al formulario de pulperías (frontend y backend modelo PulperiaCreate). 3) Mejorado manejo de loading en AuthContext (setLoading(true) al inicio de checkAuth). 4) Optimizado ProtectedRoute con mejor lógica de estados y tracking de intentos de autenticación. Backend y frontend reiniciados correctamente."
