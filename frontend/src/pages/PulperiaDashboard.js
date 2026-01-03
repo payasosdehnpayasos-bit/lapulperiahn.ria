@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
+// Fixed: Added Globe icon back to imports - v2
 import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image, MessageSquare, Shield, Clock, MapPin, Phone, Check, Share2, Copy, Globe } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
