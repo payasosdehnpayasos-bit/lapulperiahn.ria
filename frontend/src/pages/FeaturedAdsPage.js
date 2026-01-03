@@ -305,9 +305,9 @@ const FeaturedAdsPage = () => {
             Contacta al administrador para activar tu espacio publicitario.
           </p>
           <ul className="text-stone-500 text-sm mt-3 space-y-1">
-            <li>✓ Imagen o video de alta calidad</li>
+            <li>✓ Imagen de alta calidad</li>
+            <li>✓ Texto descriptivo de tu oferta</li>
             <li>✓ Visible para todos los usuarios</li>
-            <li>✓ Enlace directo a tu pulpería</li>
             <li>✓ 30 días de exposición</li>
           </ul>
         </div>
