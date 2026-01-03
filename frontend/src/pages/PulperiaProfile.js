@@ -683,13 +683,6 @@ const PulperiaProfile = () => {
         </div>
       )}
 
-      {/* Modal de Compartir */}
-      <SharePulperia
-        pulperia={pulperia}
-        open={showShareDialog}
-        onOpenChange={setShowShareDialog}
-      />
-
       <BottomNav user={user} cartCount={cartCount} />
     </div>
   );
