@@ -303,26 +303,6 @@ const PulperiaDashboard = () => {
   };
 
   // Función para verificar y desbloquear nuevos logros
-  const checkForNewAchievements = async () => {
-    if (!selectedPulperia) return;
-    try {
-      const res = await api.post(`/api/pulperias/${selectedPulperia.pulperia_id}/check-achievements`);
-      if (res.data.new_achievements && res.data.new_achievements.length > 0) {
-        res.data.new_achievements.forEach(ach => {
-          toast.success(`🏆 ¡Nuevo logro desbloqueado: ${ach.name}!`, {
-            duration: 5000,
-            style: { background: '#D4AF37', color: '#1a1a1a', fontWeight: 'bold' }
-          });
-        });
-        // Recargar achievements
-        const achievementsRes = await api.get(`/api/pulperias/${selectedPulperia.pulperia_id}/achievements`);
-        setAchievements(achievementsRes.data);
-      }
-    } catch (error) {
-      console.error('Error checking achievements:', error);
-    }
-  };
-
   const checkNewOrders = async (pulperiaId) => {
     try {
       const ordersRes = await api.get(`/api/orders`);
