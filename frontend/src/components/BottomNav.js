@@ -11,8 +11,12 @@ const BottomNav = ({ user, cartCount = 0, activeTab }) => {
     return location.pathname === path;
   };
 
+  // Determine user type - default to 'customer' if not set
+  const userType = user?.user_type || 'customer';
+  const isPulperia = userType === 'pulperia';
+
   // Items fijos para cada tipo de usuario - siempre 5 items
-  const navItems = user?.user_type === 'pulperia' ? [
+  const navItems = isPulperia ? [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', testId: 'nav-dashboard', tab: 'dashboard' },
     { icon: Briefcase, label: 'Chamba', path: '/jobs', testId: 'nav-jobs', tab: 'jobs', isChamba: true },
     { icon: Megaphone, label: 'Anuncios', path: '/anuncios-globales', testId: 'nav-anuncios', tab: 'anuncios', isAnuncios: true },
