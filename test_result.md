@@ -983,3 +983,7 @@ agent_communication:
     -message: "Nuevas solicitudes: 1) Cambiar 'Twitter' a 'X' en botones de compartir (color negro). 2) Agregar campo de X/Twitter al perfil de pulperías. 3) Problema del refresh persiste - sigue redirigiendo al login."
     -agent: "main"
     -message: "Implementados todos los cambios: 1) Cambiado 'Twitter' a 'X' con color negro en PulperiaDashboard y PulperiaProfile. 2) Agregado campo twitter_url al formulario de pulperías (frontend y backend modelo PulperiaCreate). 3) Mejorado manejo de loading en AuthContext (setLoading(true) al inicio de checkAuth). 4) Optimizado ProtectedRoute con mejor lógica de estados y tracking de intentos de autenticación. Backend y frontend reiniciados correctamente."
+    -agent: "user"
+    -message: "Solicitudes: 1) Simplificar anuncio global a solo imagen y texto (como anuncio de pulpería). 2) Problema persiste: no puede subir fotos."
+    -agent: "main"
+    -message: "Anuncio global simplificado exitosamente: 1) Eliminados campos de título, video y link. 2) Solo quedan imagen y texto descriptivo (obligatorios). 3) Agregado botón de eliminar para dueños de anuncios. 4) Actualizada info box con nuevas características. 5) Endpoint de subida de imagen verificado - funciona correctamente con autenticación, acepta JPEG/PNG/GIF/WebP hasta 15MB, retorna base64 data URL. Frontend reiniciado. Problema de subida de fotos puede ser de caché del navegador - requiere hard refresh (Ctrl+Shift+R)."
