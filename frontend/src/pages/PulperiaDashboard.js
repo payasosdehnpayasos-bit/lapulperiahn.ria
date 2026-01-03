@@ -270,14 +270,13 @@ const PulperiaDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      // More specific error handling
+      // Only show error toast for critical errors (auth issues)
       if (error.response?.status === 401) {
         toast.error('Sesión expirada. Por favor inicia sesión nuevamente.');
       } else if (error.response?.status === 403) {
         toast.error('No tienes permisos para acceder a esta página.');
-      } else {
-        toast.error('Error al cargar datos. Intenta recargar la página.');
       }
+      // Don't show toast for other errors - they might be temporary
     } finally {
       setLoading(false);
     }
