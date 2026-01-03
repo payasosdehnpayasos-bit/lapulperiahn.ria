@@ -17,9 +17,9 @@ const ProtectedRoute = ({ children }) => {
   // Determine authentication status
   const isAuthenticated = hasUserFromCallback || !!user;
 
-  // Show loading state - but only if we have a stored token (might be re-authenticating)
-  // This prevents flashing the login screen during refresh
-  if (loading && (hasUserFromCallback || hasStoredToken)) {
+  // Show loading state ALWAYS when loading AND we have a token
+  // This prevents redirecting during token validation
+  if (loading && hasStoredToken) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-950 relative overflow-hidden">
         {/* Nebulosa de fondo */}
@@ -44,23 +44,27 @@ const ProtectedRoute = ({ children }) => {
           }}
         />
         <div className="relative z-10">
-          <GalacticLoader size="default" text="Cargando..." />
+          <GalacticLoader size="default" text="Verificando sesión..." />
         </div>
       </div>
     );
   }
 
-  // Redirect to login only if:
-  // 1. Not loading AND
-  // 2. Not authenticated AND
-  // 3. No stored token (to prevent flashing during token validation)
+  // Redirect to login only if we're sure user is not authenticated
+  // AND no token exists (to prevent false redirects during validation)
   if (!loading && !isAuthenticated && !hasStoredToken) {
     return <Navigate to="/" replace />;
   }
-  
-  // If we're still loading but no token, also redirect
-  if (!loading && !isAuthenticated) {
-    return <Navigate to="/" replace />;
+
+  // If we have a token but still loading, keep showing loader
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-950 relative overflow-hidden">
+        <div className="relative z-10">
+          <GalacticLoader size="default" text="Cargando..." />
+        </div>
+      </div>
+    );
   }
 
   return children;
