@@ -50,10 +50,24 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expirado o inválido
-      localStorage.removeItem('session_token');
-      // Solo redirigir si no estamos ya en la landing page
-      if (window.location.pathname !== '/' && window.location.pathname !== '/auth/callback') {
-        window.location.href = '/';
+      const currentPath = window.location.pathname;
+      
+      // Solo limpiar token y redirigir si NO estamos en páginas públicas
+      if (currentPath !== '/' && 
+          currentPath !== '/auth/callback' && 
+          !currentPath.startsWith('/p/')) {
+        
+        // Solo redirigir si realmente no tenemos token
+        const hasToken = localStorage.getItem('session_token');
+        if (hasToken) {
+          // Si tenemos token pero falla, puede ser un error temporal
+          // NO limpiar el token ni redirigir inmediatamente
+          console.log('[API] 401 error but token exists - may be temporary network issue');
+        } else {
+          // No hay token, redirigir
+          localStorage.removeItem('session_token');
+          window.location.href = '/';
+        }
       }
     }
     return Promise.reject(error);
