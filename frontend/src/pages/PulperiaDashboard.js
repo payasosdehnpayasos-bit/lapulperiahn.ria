@@ -905,9 +905,9 @@ const PulperiaDashboard = () => {
                     const text = `¡Visita ${selectedPulperia.name}!`;
                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
                   }}
-                  className="bg-sky-500 hover:bg-sky-400 text-white text-xs py-2"
+                  className="bg-black hover:bg-stone-900 text-white text-xs py-2"
                 >
-                  Twitter
+                  X
                 </Button>
               </div>
               
