@@ -897,7 +897,7 @@ const PulperiaDashboard = () => {
                 <Share2 className="w-4 h-4 text-red-400" />
                 <p className="text-sm font-medium text-white">Compartir Mi Pulpería</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-3">
                 <div className="flex-1 bg-stone-800 rounded-lg px-3 py-2 text-sm text-stone-400 truncate border border-stone-700">
                   {window.location.origin}/p/{selectedPulperia.pulperia_id}
                 </div>
@@ -911,24 +911,41 @@ const PulperiaDashboard = () => {
                 >
                   <Copy className="w-4 h-4" />
                 </Button>
+              </div>
+              
+              {/* Social Share Buttons */}
+              <div className="grid grid-cols-3 gap-2">
                 <Button
                   onClick={() => {
                     const shareUrl = `${window.location.origin}/p/${selectedPulperia.pulperia_id}`;
-                    if (navigator.share) {
-                      navigator.share({
-                        title: selectedPulperia.name,
-                        text: `¡Visita ${selectedPulperia.name} en La Pulpería!`,
-                        url: shareUrl
-                      });
-                    } else {
-                      window.open(shareUrl, '_blank');
-                    }
+                    const text = `¡Visita ${selectedPulperia.name} en La Pulpería!`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + shareUrl)}`, '_blank');
                   }}
-                  className="bg-stone-800 hover:bg-stone-700 text-white border border-stone-700 px-3"
+                  className="bg-green-600 hover:bg-green-500 text-white text-xs py-2"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  WhatsApp
+                </Button>
+                <Button
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/p/${selectedPulperia.pulperia_id}`;
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+                  }}
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-xs py-2"
+                >
+                  Facebook
+                </Button>
+                <Button
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/p/${selectedPulperia.pulperia_id}`;
+                    const text = `¡Visita ${selectedPulperia.name}!`;
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                  }}
+                  className="bg-sky-500 hover:bg-sky-400 text-white text-xs py-2"
+                >
+                  Twitter
                 </Button>
               </div>
+              
               <p className="text-xs text-stone-500 mt-2">
                 Comparte este link con tus clientes. Al abrirlo, podrán ver tu pulpería e iniciar sesión.
               </p>
