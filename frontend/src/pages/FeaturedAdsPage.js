@@ -238,45 +238,21 @@ const FeaturedAdsPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {ads.map((ad) => (
+            {ads.map(ad => (
               <div 
-                key={ad.ad_id}
-                className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl border border-stone-700 overflow-hidden shadow-xl hover:border-amber-500/50 transition-all"
+                key={ad.ad_id} 
+                className="bg-stone-900/80 backdrop-blur-sm border border-stone-800 rounded-2xl overflow-hidden shadow-xl"
               >
-                {/* Ad Header */}
-                <div className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-4 py-2.5 flex items-center gap-2 border-b border-stone-700/50">
-                  <Megaphone className="w-4 h-4 text-amber-400" />
-                  <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">Anuncio Destacado</span>
-                  <span className="text-amber-400 text-xs ml-1">• 1000 Lps</span>
-                  <span className="text-stone-500 text-xs ml-auto">
-                    Expira: {new Date(ad.expires_at).toLocaleDateString()}
-                  </span>
-                </div>
-                
-                {/* Full Image/Video Display - Tamaño adaptativo */}
-                <div className="relative bg-stone-950 flex items-center justify-center">
-                  {ad.video_url ? (
-                    <div className="relative w-full">
-                      <video 
-                        src={ad.video_url}
-                        className="w-full max-h-[500px] object-contain mx-auto"
-                        controls
-                        muted
-                        loop
-                        playsInline
-                      />
-                      <div className="absolute top-2 right-2 bg-black/60 rounded-full p-2">
-                        <Play className="w-4 h-4 text-white" fill="white" />
-                      </div>
-                    </div>
-                  ) : ad.image_url ? (
+                {/* Ad Image */}
+                <div className="relative bg-stone-950">
+                  {ad.image_url ? (
                     <div 
                       className="cursor-pointer group flex items-center justify-center p-4"
                       onClick={() => setViewingAd(ad)}
                     >
                       <img 
                         src={ad.image_url}
-                        alt={ad.title || ad.pulperia_name}
+                        alt={ad.pulperia_name}
                         className="max-w-full max-h-[500px] object-contain rounded-lg shadow-lg"
                         style={{ minHeight: '150px' }}
                       />
@@ -293,9 +269,6 @@ const FeaturedAdsPage = () => {
                 
                 {/* Ad Content */}
                 <div className="p-4">
-                  {ad.title && (
-                    <h3 className="text-xl font-bold text-white mb-2">{ad.title}</h3>
-                  )}
                   {ad.description && (
                     <p className="text-stone-300 text-base leading-relaxed mb-4">{ad.description}</p>
                   )}
@@ -306,13 +279,15 @@ const FeaturedAdsPage = () => {
                       <span className="text-amber-400 font-bold">{ad.pulperia_name}</span>
                     </div>
                     
-                    {ad.link_url && (
+                    {/* Delete button - only for ad owner */}
+                    {user && ad.pulperia_id && mySlot?.pulperia_id === ad.pulperia_id && (
                       <Button
-                        onClick={() => handleAdClick(ad)}
-                        className="bg-amber-600 hover:bg-amber-500 text-white"
+                        onClick={() => handleDeleteAd(ad.ad_id)}
+                        variant="destructive"
+                        size="sm"
+                        className="bg-red-500/20 text-red-400 hover:bg-red-500/30"
                       >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Ver más
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     )}
                   </div>
