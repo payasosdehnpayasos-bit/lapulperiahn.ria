@@ -41,8 +41,8 @@ Backend URL: https://lapulperiahn.shop
 
 ### Acceso desde Preview:
 ```
-URL de acceso: https://tienda-control-6.preview.emergentagent.com
-Backend URL: https://tienda-control-6.preview.emergentagent.com
+URL de acceso: https://dashboard-bugfix-5.preview.emergentagent.com
+Backend URL: https://dashboard-bugfix-5.preview.emergentagent.com
 ✅ Todas las llamadas API van al mismo dominio
 ✅ Sin problemas de CORS
 ✅ Login funciona correctamente
@@ -60,10 +60,10 @@ Backend URL: https://tienda-control-6.preview.emergentagent.com
 
 ### Desde Preview:
 
-1. **Ir a:** https://tienda-control-6.preview.emergentagent.com
+1. **Ir a:** https://dashboard-bugfix-5.preview.emergentagent.com
 2. **Abrir consola (F12)**
 3. **Buscar:** `[API Config] Backend URL:`
-4. **Debería mostrar:** `https://tienda-control-6.preview.emergentagent.com`
+4. **Debería mostrar:** `https://dashboard-bugfix-5.preview.emergentagent.com`
 5. **Hacer login** → ✅ Funciona
 
 ## 📋 Estado del Dominio

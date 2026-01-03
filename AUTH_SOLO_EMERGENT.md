@@ -11,7 +11,7 @@ Tu aplicación ahora usa **SOLO Emergent Auth** en todos los dominios. Esto sign
 
 ## 🚀 PROBAR AHORA MISMO
 
-1. **Ir a:** https://tienda-control-6.preview.emergentagent.com
+1. **Ir a:** https://dashboard-bugfix-5.preview.emergentagent.com
 2. **O ir a:** https://lapulperiahn.shop (cuando configures DNS)
 3. **Click en:** "Comenzar con Google"
 4. ✅ **Funciona con Emergent Auth** - Sin bloqueos
@@ -113,7 +113,7 @@ sudo supervisorctl restart frontend
 
 1. **Preview Domain:**
    ```
-   URL: https://tienda-control-6.preview.emergentagent.com
+   URL: https://dashboard-bugfix-5.preview.emergentagent.com
    Auth: Emergent OAuth ✅
    Estado: FUNCIONA AHORA
    ```

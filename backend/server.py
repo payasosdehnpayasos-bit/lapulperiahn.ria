@@ -2771,7 +2771,7 @@ async def admin_get_all_global_announcements(
 
 # Dominios permitidos para CORS
 ALLOWED_ORIGINS = [
-    "https://tienda-control-6.preview.emergentagent.com",
+    "https://dashboard-bugfix-5.preview.emergentagent.com",
     "https://lapulperiastore.net",
     "https://www.lapulperiastore.net",
     "https://red-auth-connect.emergent.host",
