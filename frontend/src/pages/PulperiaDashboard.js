@@ -384,6 +384,7 @@ const PulperiaDashboard = () => {
       website: selectedPulperia.website || '',
       instagram_url: selectedPulperia.instagram_url || '',
       facebook_url: selectedPulperia.facebook_url || '',
+      twitter_url: selectedPulperia.twitter_url || '',
       hours: selectedPulperia.hours || '',
       lat: selectedPulperia.location?.lat?.toString() || '',
       lng: selectedPulperia.location?.lng?.toString() || '',
