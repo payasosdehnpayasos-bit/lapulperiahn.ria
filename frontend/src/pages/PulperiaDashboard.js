@@ -569,7 +569,9 @@ const PulperiaDashboard = () => {
         background_color: '#DC2626',
         is_online_only: false
       });
-      await fetchData();
+      
+      // Reload page to get fresh data and avoid state issues
+      window.location.reload();
     } catch (error) {
       console.error('Error creating pulperia:', error);
       toast.error(getErrorMessage(error, 'Error al crear pulpería'));
