@@ -240,6 +240,27 @@ const AdminPanel = () => {
     }
   };
 
+  const handleDeletePulperia = async (pulperiaId, pulperiaName) => {
+    const confirmation = window.prompt(
+      `⚠️ ADVERTENCIA: Esta acción eliminará permanentemente la pulpería "${pulperiaName}" y TODOS sus datos (productos, órdenes, empleos, anuncios, reseñas).\n\nEscribe el nombre EXACTO de la pulpería para confirmar:`
+    );
+    
+    if (confirmation !== pulperiaName) {
+      if (confirmation !== null) {
+        toast.error('El nombre no coincide. Operación cancelada.');
+      }
+      return;
+    }
+    
+    try {
+      await api.delete(`/api/pulperias/${pulperiaId}`);
+      toast.success(`Pulpería "${pulperiaName}" eliminada exitosamente`);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Error al eliminar pulpería');
+    }
+  };
+
   // Global Announcements Functions
   const handleCreateGlobalAnnouncement = async () => {
     if (!globalAnnTitle.trim() || !globalAnnContent.trim()) {
