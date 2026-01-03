@@ -76,23 +76,26 @@ const FeaturedAdsPage = () => {
   };
 
   const handleUploadAd = async () => {
-    if (!adForm.image_url && !adForm.video_url) {
-      toast.error('Debes subir al menos una imagen o video');
+    if (!adForm.image_url) {
+      toast.error('Debes subir una imagen');
+      return;
+    }
+    
+    if (!adForm.description || adForm.description.trim() === '') {
+      toast.error('Debes agregar un texto descriptivo');
       return;
     }
     
     setUploading(true);
     try {
       const params = new URLSearchParams();
-      if (adForm.title) params.append('title', adForm.title);
-      if (adForm.description) params.append('description', adForm.description);
-      if (adForm.image_url) params.append('image_url', adForm.image_url);
-      if (adForm.video_url) params.append('video_url', adForm.video_url);
-      if (adForm.link_url) params.append('link_url', adForm.link_url);
+      params.append('description', adForm.description);
+      params.append('image_url', adForm.image_url);
       
       const res = await api.post(`/api/featured-ads/upload?${params.toString()}`);
       toast.success('¡Anuncio publicado exitosamente!');
       setShowUploadDialog(false);
+      setAdForm({ description: '', image_url: '' });
       fetchData();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Error al publicar anuncio');
