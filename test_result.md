@@ -987,3 +987,7 @@ agent_communication:
     -message: "Solicitudes: 1) Simplificar anuncio global a solo imagen y texto (como anuncio de pulpería). 2) Problema persiste: no puede subir fotos."
     -agent: "main"
     -message: "Anuncio global simplificado exitosamente: 1) Eliminados campos de título, video y link. 2) Solo quedan imagen y texto descriptivo (obligatorios). 3) Agregado botón de eliminar para dueños de anuncios. 4) Actualizada info box con nuevas características. 5) Endpoint de subida de imagen verificado - funciona correctamente con autenticación, acepta JPEG/PNG/GIF/WebP hasta 15MB, retorna base64 data URL. Frontend reiniciado. Problema de subida de fotos puede ser de caché del navegador - requiere hard refresh (Ctrl+Shift+R)."
+    -agent: "user"
+    -message: "El refresh funciona pero al cambiar de pestaña (Tab) deslogea. Necesito que la sesión se mantenga iniciada hasta cerrar sesión explícitamente."
+    -agent: "main"
+    -message: "Problema de sesión resuelto: 1) Eliminado listener de visibilitychange que verificaba auth al cambiar de pestaña. 2) Optimizado checkAuth para no volver a verificar si ya tenemos user data. 3) Token ya configurado para durar 365 días en backend. 4) La sesión ahora persiste indefinidamente hasta logout explícito. 5) Solo se verifica auth en: inicio de app, refresh de página, y cuando no hay user data. Frontend reiniciado correctamente."
