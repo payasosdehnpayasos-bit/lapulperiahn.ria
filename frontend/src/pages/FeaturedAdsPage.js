@@ -349,30 +349,7 @@ const FeaturedAdsPage = () => {
           
           <div className="space-y-4 mt-4">
             <div>
-              <Label className="text-stone-300">Título (opcional)</Label>
-              <Input
-                value={adForm.title}
-                onChange={(e) => setAdForm({...adForm, title: e.target.value})}
-                placeholder="Título de tu anuncio"
-                className="bg-stone-800 border-stone-700 text-white mt-1"
-                maxLength={60}
-              />
-            </div>
-            
-            <div>
-              <Label className="text-stone-300">Descripción (opcional)</Label>
-              <Textarea
-                value={adForm.description}
-                onChange={(e) => setAdForm({...adForm, description: e.target.value})}
-                placeholder="Describe tu oferta o promoción..."
-                className="bg-stone-800 border-stone-700 text-white mt-1"
-                rows={3}
-                maxLength={200}
-              />
-            </div>
-            
-            <div>
-              <Label className="text-stone-300">Imagen del Anuncio (se mostrará completa)</Label>
+              <Label className="text-stone-300">Imagen del Anuncio *</Label>
               <div className="mt-1">
                 <ImageUpload
                   onChange={(url) => setAdForm({...adForm, image_url: url})}
@@ -385,37 +362,32 @@ const FeaturedAdsPage = () => {
             </div>
             
             <div>
-              <Label className="text-stone-300">URL de Video (opcional)</Label>
-              <Input
-                value={adForm.video_url}
-                onChange={(e) => setAdForm({...adForm, video_url: e.target.value})}
-                placeholder="https://... (link directo al video)"
+              <Label className="text-stone-300">Texto del Anuncio *</Label>
+              <Textarea
+                value={adForm.description}
+                onChange={(e) => setAdForm({...adForm, description: e.target.value})}
+                placeholder="Describe tu oferta o promoción..."
                 className="bg-stone-800 border-stone-700 text-white mt-1"
+                rows={4}
+                maxLength={300}
               />
-              <p className="text-stone-500 text-xs mt-1">Si subes video, se reproducirá automáticamente (sin sonido)</p>
-            </div>
-            
-            <div>
-              <Label className="text-stone-300">URL de destino (opcional)</Label>
-              <Input
-                value={adForm.link_url}
-                onChange={(e) => setAdForm({...adForm, link_url: e.target.value})}
-                placeholder="A dónde llevará el click (por defecto: tu pulpería)"
-                className="bg-stone-800 border-stone-700 text-white mt-1"
-              />
+              <p className="text-stone-500 text-xs mt-1">{adForm.description.length}/300 caracteres</p>
             </div>
             
             <div className="flex gap-3 pt-4">
               <Button
                 variant="outline"
-                onClick={() => setShowUploadDialog(false)}
+                onClick={() => {
+                  setShowUploadDialog(false);
+                  setAdForm({ description: '', image_url: '' });
+                }}
                 className="flex-1 border-stone-700 text-stone-300"
               >
                 Cancelar
               </Button>
               <Button
                 onClick={handleUploadAd}
-                disabled={uploading || (!adForm.image_url && !adForm.video_url)}
+                disabled={uploading || !adForm.image_url || !adForm.description}
                 className="flex-1 bg-amber-600 hover:bg-amber-500 text-black"
               >
                 {uploading ? (
