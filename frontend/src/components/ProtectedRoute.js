@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import GalacticLoader from './GalacticLoader';
@@ -7,28 +7,18 @@ import GalacticLoader from './GalacticLoader';
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const { user, loading } = useAuth();
-  const [hasAttemptedAuth, setHasAttemptedAuth] = useState(false);
   
   // If user data was passed from AuthCallback, use it immediately
   const hasUserFromCallback = useMemo(() => !!location.state?.user, [location.state?.user]);
   
   // Check if we have a session token stored (indicates we might be authenticated)
-  const hasStoredToken = useMemo(() => !!localStorage.getItem('session_token'), []);
-  
-  // Track when we've finished at least one auth attempt
-  useEffect(() => {
-    if (!loading && hasStoredToken) {
-      setHasAttemptedAuth(true);
-    }
-  }, [loading, hasStoredToken]);
+  // Check this on every render, not just mount
+  const hasStoredToken = !!localStorage.getItem('session_token');
   
   // Determine authentication status
   const isAuthenticated = hasUserFromCallback || !!user;
 
-  // Show loading ONLY when:
-  // 1. We're loading AND
-  // 2. We have a token AND
-  // 3. We haven't attempted auth yet OR we're still verifying
+  // Show loading when we're verifying auth and we have a token
   const shouldShowLoader = loading && hasStoredToken;
 
   if (shouldShowLoader) {
@@ -62,18 +52,29 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Redirect to login if definitely not authenticated
-  if (!loading && !isAuthenticated && !hasStoredToken) {
-    return <Navigate to="/" replace />;
-  }
-  
-  // If we're authenticated or still checking, render children
-  if (isAuthenticated || (loading && hasStoredToken)) {
+  // If we have a token and user data, allow access
+  if (hasStoredToken && isAuthenticated) {
     return children;
   }
+  
+  // If we have a token but no user data yet and not loading, wait
+  if (hasStoredToken && !isAuthenticated && !loading) {
+    // Token exists but user data hasn't loaded - this shouldn't normally happen
+    // but if it does, show loader briefly while context catches up
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-950">
+        <GalacticLoader size="default" text="Cargando..." />
+      </div>
+    );
+  }
 
-  // Final fallback - redirect to login
-  return <Navigate to="/" replace />;
+  // No token and not authenticated - redirect to login
+  if (!hasStoredToken && !isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Default: allow access if authenticated
+  return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;
