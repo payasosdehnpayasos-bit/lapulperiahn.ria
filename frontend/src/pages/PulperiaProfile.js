@@ -431,10 +431,10 @@ const PulperiaProfile = () => {
         </div>
       </div>
 
-      {/* Tabs - Now includes Logros */}
+      {/* Tabs */}
       <div className="px-4 mb-4">
         <div className="flex bg-stone-900 rounded-xl p-1 border border-stone-800 overflow-x-auto">
-          {['products', 'anuncios', 'empleos', 'reviews', 'logros'].map(tab => (
+          {['products', 'anuncios', 'empleos', 'reviews'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -445,8 +445,7 @@ const PulperiaProfile = () => {
               {tab === 'products' ? `Productos` : 
                tab === 'anuncios' ? `Anuncios` :
                tab === 'empleos' ? `Empleos` : 
-               tab === 'reviews' ? `Reviews` :
-               `Logros`}
+               `Reviews`}
             </button>
           ))}
         </div>
