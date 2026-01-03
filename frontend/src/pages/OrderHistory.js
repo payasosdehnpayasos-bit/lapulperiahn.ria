@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
-import { History, TrendingUp, ShoppingBag, DollarSign, Calendar, Package, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { History, TrendingUp, ShoppingBag, DollarSign, Calendar, Package, BarChart3, ArrowUpRight, ArrowDownRight, Bot } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
+import AITips from '../components/dashboard/AITips';
 
 
 const OrderHistory = () => {
