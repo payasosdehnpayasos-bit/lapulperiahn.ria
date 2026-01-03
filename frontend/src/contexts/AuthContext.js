@@ -100,6 +100,8 @@ export const AuthProvider = ({ children }) => {
       }
 
       setUser(response.data);
+      // Cache user data
+      localStorage.setItem('cached_user', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('[Auth] Login error:', error.response?.data || error.message);
