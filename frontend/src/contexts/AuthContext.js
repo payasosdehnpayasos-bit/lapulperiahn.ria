@@ -55,26 +55,37 @@ export const AuthProvider = ({ children }) => {
         }
       });
       
-      setUser(response.data);
+      const userData = response.data;
+      setUser(userData);
       // Cache user data for faster subsequent loads
-      localStorage.setItem('cached_user', JSON.stringify(response.data));
+      localStorage.setItem('cached_user', JSON.stringify(userData));
       setLoading(false);
-      return response.data;
+      return userData;
     } catch (error) {
       console.log('[Auth] Session check failed:', error.message);
-      // Only clear token on 401 errors (unauthorized)
+      
+      // Only clear everything on 401 (token invalid/expired)
       if (error.response?.status === 401) {
+        console.log('[Auth] 401 - Token invalid, clearing session');
         localStorage.removeItem('session_token');
         localStorage.removeItem('cached_user');
         setUser(null);
       } else {
-        // For network errors, timeout, etc. - keep the token for retry
-        console.log('[Auth] Network error, keeping session token for retry');
+        // For network errors or other issues, keep cached user if available
+        console.log('[Auth] Network error - keeping cached user and token');
+        const cachedUser = localStorage.getItem('cached_user');
+        if (cachedUser && !user) {
+          try {
+            setUser(JSON.parse(cachedUser));
+          } catch (e) {
+            console.error('[Auth] Failed to parse cached user');
+          }
+        }
       }
       setLoading(false);
       return null;
     }
-  }, []);
+  }, [user]);
 
   // Login with session_id from Google OAuth (Emergent Auth)
   const login = useCallback(async (sessionId) => {
