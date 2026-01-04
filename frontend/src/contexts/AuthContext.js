@@ -16,6 +16,21 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const isLoggingIn = useRef(false);
 
+  // ✅ SOLUCIÓN 1: Cargar usuario desde localStorage PRIMERO
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user_data');
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        console.log('[Auth] Usuario cargado desde localStorage:', userData.name);
+      } catch (e) {
+        console.error('[Auth] Error parsing saved user:', e);
+        localStorage.removeItem('user_data');
+      }
+    }
+  }, []);
+
   // Check existing session on mount
   const checkAuth = useCallback(async () => {
     if (isLoggingIn.current) {
@@ -28,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) {
       setUser(null);
       setLoading(false);
+      localStorage.removeItem('user_data'); // Limpiar datos guardados
       return null;
     }
     
@@ -39,25 +55,36 @@ export const AuthProvider = ({ children }) => {
         }
       });
       
+      // ✅ SOLUCIÓN 2: Guardar usuario en localStorage
       setUser(response.data);
+      localStorage.setItem('user_data', JSON.stringify(response.data));
+      console.log('[Auth] Sesión verificada y guardada');
+      
       return response.data;
     } catch (error) {
-      console.log('[Auth] Session check failed:', error.message);
+      console.log('[Auth] Error verificando sesión:', error.message);
       
-      // Only clear token on 401 errors (unauthorized)
+      // ✅ SOLUCIÓN 3: Solo limpiar en errores 401 (no autorizado)
       if (error.response?.status === 401) {
+        console.log('[Auth] Token inválido (401), limpiando sesión');
         localStorage.removeItem('session_token');
+        localStorage.removeItem('user_data');
         setUser(null);
       } else {
-        // ✅ SOLUCIÓN: Para errores de red, mantener la sesión actual
-        // No limpiar el usuario para evitar logout inesperado al navegar
-        console.log('[Auth] Network error, maintaining current session');
+        // Para errores de red (timeout, connection refused, etc)
+        // MANTENER la sesión actual del usuario
+        console.log('[Auth] Error de red, manteniendo sesión actual');
         
-        // Si ya tenemos datos de usuario, mantenerlos
-        if (!user) {
-          // Solo si no hay usuario previo, intentar obtener datos básicos del token
-          // pero no forzar logout
-          console.log('[Auth] Token exists but no user data, will retry on next navigation');
+        // Si tenemos usuario en localStorage, mantenerlo
+        const savedUser = localStorage.getItem('user_data');
+        if (savedUser && !user) {
+          try {
+            const userData = JSON.parse(savedUser);
+            setUser(userData);
+            console.log('[Auth] Usuario restaurado desde localStorage tras error de red');
+          } catch (e) {
+            console.error('[Auth] Error restaurando usuario:', e);
+          }
         }
       }
       return null;
@@ -84,12 +111,15 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      // Guardar token si viene en la respuesta
+      // ✅ SOLUCIÓN 4: Guardar token Y usuario
       if (response.data.session_token) {
         localStorage.setItem('session_token', response.data.session_token);
       }
-
+      
       setUser(response.data);
+      localStorage.setItem('user_data', JSON.stringify(response.data));
+      console.log('[Auth] Login exitoso, datos guardados');
+
       return response.data;
     } catch (error) {
       console.error('[Auth] Login error:', error.response?.data || error.message);
@@ -108,10 +138,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('session_token', userData.session_token);
     }
     setUser(userData);
+    localStorage.setItem('user_data', JSON.stringify(userData));
     setLoading(false);
+    console.log('[Auth] Login directo exitoso');
   }, []);
 
-  // Logout - only clears session when user explicitly logs out
+  // Logout - Limpia TODO
   const logout = useCallback(async () => {
     const token = localStorage.getItem('session_token');
     
@@ -128,7 +160,7 @@ export const AuthProvider = ({ children }) => {
       console.error('[Auth] Logout error:', error);
     } finally {
       localStorage.removeItem('session_token');
-      // Don't clear disclaimer_seen - user shouldn't see it again
+      localStorage.removeItem('user_data');
       setUser(null);
       toast.success('Sesión cerrada');
     }
@@ -145,7 +177,10 @@ export const AuthProvider = ({ children }) => {
           headers: getAuthHeaders()
         }
       );
+      
       setUser(response.data);
+      localStorage.setItem('user_data', JSON.stringify(response.data));
+      
       return response.data;
     } catch (error) {
       console.error('[Auth] Set user type error:', error);
@@ -153,7 +188,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Check auth on mount - but preserve session across refreshes
+  // ✅ SOLUCIÓN 5: Función para actualizar usuario localmente
+  const updateUser = useCallback((updates) => {
+    setUser(prev => {
+      const updated = { ...prev, ...updates };
+      localStorage.setItem('user_data', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  // Check auth on mount - Verificar sesión solo una vez al cargar
   useEffect(() => {
     const hasSessionInUrl = window.location.hash.includes('session_id=');
     const isCallbackPage = window.location.pathname === '/auth/callback';
@@ -163,29 +207,10 @@ export const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [checkAuth]);
+  }, []); // ✅ Sin dependencias, solo se ejecuta una vez
 
-  // ✅ SOLUCIÓN: LISTENER DE VISIBILIDAD ELIMINADO
-  // El listener 'visibilitychange' causaba que al cambiar de tab se validara
-  // la sesión y si había error de red, sacaba al usuario del sistema.
-  // 
-  // ANTES (PROBLEMÁTICO):
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.visibilityState === 'visible' && !isLoggingIn.current) {
-  //       const token = localStorage.getItem('session_token');
-  //       if (token && !user) {
-  //         checkAuth(); // ← Esto causaba logout al navegar entre tabs
-  //       }
-  //     }
-  //   };
-  //   
-  //   document.addEventListener('visibilitychange', handleVisibilityChange);
-  //   return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  // }, [checkAuth, user]);
-  //
-  // AHORA: Ya no validamos sesión al cambiar de tab. La validación inicial
-  // en el useEffect de arriba (líneas 165-173) es suficiente.
+  // ✅ SOLUCIÓN 6: NO hay listener de visibilitychange
+  // La sesión NO se valida al cambiar de tab
 
   const value = {
     user,
@@ -195,7 +220,7 @@ export const AuthProvider = ({ children }) => {
     loginWithUser,
     logout,
     checkAuth,
-    setUser,
+    setUser: updateUser, // Usar la función actualizada
     setUserType,
     getAuthHeaders
   };
@@ -213,4 +238,3 @@ export const useAuth = () => {
 
 // Export helper for use outside React components
 export { getAuthHeaders };
-
