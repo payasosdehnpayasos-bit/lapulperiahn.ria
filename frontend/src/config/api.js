@@ -1,27 +1,19 @@
 // Configuración de API para La Pulpería
-// Este archivo configura axios para enviar el token en todas las requests
-
 import axios from 'axios';
 
-// BACKEND URL DINÁMICO - Detecta automáticamente el dominio
-// Si estás en lapulperiahn.shop, usa ese backend
-// Si estás en preview, usa el preview backend
+// BACKEND URL DINÁMICO
 const getBackendURL = () => {
   const hostname = window.location.hostname;
   
-  // Si estamos en lapulperiahn.shop, usar ese dominio
   if (hostname === 'lapulperiahn.shop' || hostname === 'www.lapulperiahn.shop') {
     return `https://${hostname}`;
   }
   
-  // Si estamos en cualquier otro dominio (preview, local, etc), usar el origin actual
   return window.location.origin;
 };
 
 export const BACKEND_URL = getBackendURL();
-
 console.log('[API Config] Backend URL:', BACKEND_URL);
-console.log('[API Config] Current hostname:', window.location.hostname);
 
 // Crear instancia de axios configurada
 const api = axios.create({
@@ -30,7 +22,7 @@ const api = axios.create({
   timeout: 30000
 });
 
-// Interceptor para añadir token a todas las requests
+// ✅ MEJORA: Interceptor de request con mejor manejo
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('session_token');
@@ -44,32 +36,40 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para manejar errores de auth
+// ✅ MEJORA: Interceptor de response SIN logout agresivo
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const currentPath = window.location.pathname;
+    const isPublicPage = currentPath === '/' || 
+                        currentPath === '/auth/callback' || 
+                        currentPath.startsWith('/p/');
+
+    // Solo manejar errores 401 (no autorizado)
     if (error.response?.status === 401) {
-      // Token expirado o inválido
-      const currentPath = window.location.pathname;
+      // NO redirigir si estamos en páginas públicas
+      if (isPublicPage) {
+        return Promise.reject(error);
+      }
+
+      // Verificar si realmente no hay token
+      const hasToken = localStorage.getItem('session_token');
       
-      // Solo limpiar token y redirigir si NO estamos en páginas públicas
-      if (currentPath !== '/' && 
-          currentPath !== '/auth/callback' && 
-          !currentPath.startsWith('/p/')) {
-        
-        // Solo redirigir si realmente no tenemos token
-        const hasToken = localStorage.getItem('session_token');
-        if (hasToken) {
-          // Si tenemos token pero falla, puede ser un error temporal
-          // NO limpiar el token ni redirigir inmediatamente
-          console.log('[API] 401 error but token exists - may be temporary network issue');
-        } else {
-          // No hay token, redirigir
-          localStorage.removeItem('session_token');
-          window.location.href = '/';
-        }
+      if (!hasToken) {
+        // Sin token, redirigir al home
+        console.log('[API] Sin token, redirigiendo al home');
+        localStorage.removeItem('session_token');
+        localStorage.removeItem('user_data');
+        window.location.href = '/';
+      } else {
+        // Con token pero 401 - puede ser token expirado o error temporal
+        // NO limpiar inmediatamente, dejar que AuthContext lo maneje
+        console.log('[API] Error 401 con token presente - dejando que AuthContext maneje');
       }
     }
+
+    // Para otros errores (timeout, 500, etc) NO hacer nada especial
+    // Dejar que el código que hizo la llamada los maneje
     return Promise.reject(error);
   }
 );
