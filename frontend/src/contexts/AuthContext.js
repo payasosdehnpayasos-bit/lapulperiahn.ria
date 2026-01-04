@@ -12,15 +12,7 @@ const getAuthHeaders = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // Initialize user from localStorage cache if available
-  const [user, setUser] = useState(() => {
-    try {
-      const cachedUser = localStorage.getItem('cached_user');
-      return cachedUser ? JSON.parse(cachedUser) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const isLoggingIn = useRef(false);
 
@@ -35,19 +27,11 @@ export const AuthProvider = ({ children }) => {
     // Si no hay token, no hay sesión
     if (!token) {
       setUser(null);
-      localStorage.removeItem('cached_user');
       setLoading(false);
       return null;
     }
     
-    // If we already have user data, don't check again
-    if (user) {
-      setLoading(false);
-      return user;
-    }
-    
     try {
-      setLoading(true);
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
         timeout: 15000,
         headers: {
@@ -55,35 +39,30 @@ export const AuthProvider = ({ children }) => {
         }
       });
       
-      const userData = response.data;
-      setUser(userData);
-      // Cache user data for faster subsequent loads
-      localStorage.setItem('cached_user', JSON.stringify(userData));
-      setLoading(false);
-      return userData;
+      setUser(response.data);
+      return response.data;
     } catch (error) {
       console.log('[Auth] Session check failed:', error.message);
       
-      // Only clear everything on 401 (token invalid/expired)
+      // Only clear token on 401 errors (unauthorized)
       if (error.response?.status === 401) {
-        console.log('[Auth] 401 - Token invalid, clearing session');
         localStorage.removeItem('session_token');
-        localStorage.removeItem('cached_user');
         setUser(null);
       } else {
-        // For network errors or other issues, keep cached user if available
-        console.log('[Auth] Network error - keeping cached user and token');
-        const cachedUser = localStorage.getItem('cached_user');
-        if (cachedUser && !user) {
-          try {
-            setUser(JSON.parse(cachedUser));
-          } catch (e) {
-            console.error('[Auth] Failed to parse cached user');
-          }
+        // ✅ SOLUCIÓN: Para errores de red, mantener la sesión actual
+        // No limpiar el usuario para evitar logout inesperado al navegar
+        console.log('[Auth] Network error, maintaining current session');
+        
+        // Si ya tenemos datos de usuario, mantenerlos
+        if (!user) {
+          // Solo si no hay usuario previo, intentar obtener datos básicos del token
+          // pero no forzar logout
+          console.log('[Auth] Token exists but no user data, will retry on next navigation');
         }
       }
-      setLoading(false);
       return null;
+    } finally {
+      setLoading(false);
     }
   }, [user]);
 
@@ -111,8 +90,6 @@ export const AuthProvider = ({ children }) => {
       }
 
       setUser(response.data);
-      // Cache user data
-      localStorage.setItem('cached_user', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('[Auth] Login error:', error.response?.data || error.message);
@@ -131,8 +108,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('session_token', userData.session_token);
     }
     setUser(userData);
-    // Cache user data
-    localStorage.setItem('cached_user', JSON.stringify(userData));
     setLoading(false);
   }, []);
 
@@ -153,7 +128,6 @@ export const AuthProvider = ({ children }) => {
       console.error('[Auth] Logout error:', error);
     } finally {
       localStorage.removeItem('session_token');
-      localStorage.removeItem('cached_user');
       // Don't clear disclaimer_seen - user shouldn't see it again
       setUser(null);
       toast.success('Sesión cerrada');
@@ -172,8 +146,6 @@ export const AuthProvider = ({ children }) => {
         }
       );
       setUser(response.data);
-      // Update cache
-      localStorage.setItem('cached_user', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('[Auth] Set user type error:', error);
@@ -192,6 +164,28 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   }, [checkAuth]);
+
+  // ✅ SOLUCIÓN: LISTENER DE VISIBILIDAD ELIMINADO
+  // El listener 'visibilitychange' causaba que al cambiar de tab se validara
+  // la sesión y si había error de red, sacaba al usuario del sistema.
+  // 
+  // ANTES (PROBLEMÁTICO):
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.visibilityState === 'visible' && !isLoggingIn.current) {
+  //       const token = localStorage.getItem('session_token');
+  //       if (token && !user) {
+  //         checkAuth(); // ← Esto causaba logout al navegar entre tabs
+  //       }
+  //     }
+  //   };
+  //   
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  // }, [checkAuth, user]);
+  //
+  // AHORA: Ya no validamos sesión al cambiar de tab. La validación inicial
+  // en el useEffect de arriba (líneas 165-173) es suficiente.
 
   const value = {
     user,
@@ -219,3 +213,4 @@ export const useAuth = () => {
 
 // Export helper for use outside React components
 export { getAuthHeaders };
+
